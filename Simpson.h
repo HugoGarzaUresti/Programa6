@@ -32,8 +32,8 @@ Simpson::Simpson(){
 Simpson::Simpson(double X, double DOF){
     x = X;
     dof = DOF;
-    segments = 40;
-    error = 0.000000001;
+    segments = 100;
+    error = 0.00000000001;
     W = x/segments;
 };
 /*

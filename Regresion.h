@@ -23,11 +23,11 @@ class Regresion{
     double b1;
     double yk;
     string line;
-    vector<pair<double,double>> data;
+    vector<pair<double,double> > data;
 
     public:
     Regresion();
-    vector<pair<double,double>> readFile(string);
+    vector<pair<double,double> > readFile(string);
     double sumOfX();
     double sumOfY();
     double productOfXY();
@@ -39,6 +39,7 @@ class Regresion{
     double b0Calculation();
     double b1Calculation();
     double ykCalculation();
+    int getN();
 
 };
 
@@ -58,7 +59,7 @@ El metodo readFile abre el archivo dado e introduce los pares de numeros en un v
 Los parametros que recibe son: string el cual es nombre del archivo
 Regresa el mismo vector de pares lleno
 */
-vector<pair<double,double>> Regresion::readFile(string file){
+vector<pair<double,double> > Regresion::readFile(string file){
     ifstream read(file);
     int count = 0;
 
@@ -95,7 +96,41 @@ vector<pair<double,double>> Regresion::readFile(string file){
     Simpson simpson(xa, N-2);
     double area = 1 - 2*simpson.pCalculation();
     cout<<"sig = "<<fixed<<setprecision(10)<<area<<endl;
+
+    DistribucionT dist(0.35,N-2);
+    double calDist = dist.xCalculation();
+
+    double sum = 0;
+    double aux = 0;
+    for(int i = 0; i<N; i++){
+        aux = data[i].second - b0Calculation() - (b1Calculation() * data[i].first);
+        sum = sum + aux*aux;
+    }
+
+    double sigma = 0;
+    sigma  = sqrt((1 / (double(N) - 2)) * sum);
+    sum = 0;
+
+    for(int i = 0; i<N; i++){
+        sum = sum + ((data[i].first - averageX()) * (data[i].first - averageX()));
+    }
     
+    double aud = (x - averageX()) * (x - averageX());
+    aud = aud/sum;
+    double prod3 = sqrt(1 + (1/double(N)) + aud);
+
+    double yes = calDist * sigma * prod3;
+
+    cout<<"ran = "<<fixed<<setprecision(5)<<yes<<endl;
+    cout<<"LS = "<<fixed<<setprecision(5)<<ykCalculation() + yes<<endl;
+    if(ykCalculation()-yes < 0){
+        cout<<"LI = "<<fixed<<setprecision(5)<<0.00000<<endl;
+    }else{
+    cout<<"LI = "<<fixed<<setprecision(5)<<ykCalculation() - yes<<endl;
+    }
+
+
+
     return data;
 }
 
@@ -231,4 +266,8 @@ Regresa un numero tipo doble con el resultado
 */
 double Regresion::ykCalculation(){
     return (b0Calculation() + (b1Calculation() * x));
+}
+
+int Regresion::getN(){
+    return N;
 }

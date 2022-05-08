@@ -3,7 +3,6 @@
 El archivo DistribucionT.h es donde esta la parte logica de la integracion de 0 a x de la funcion t
 usando Simpson.h para calcular los estimados de p y acercarse a la p dada con error menor a 0.0000001*/
 #include <iostream>
-#include "Simpson.h"
 #include <cmath>
 using namespace std;
 
@@ -32,11 +31,11 @@ float DistribucionT::xCalculation(){
     x = 1;
     delta = x/2;
     int count = 0;
-    error = 0.000000001;
+    error = 0.0000000001;
     float newResult = 1;
     float oldResult = 100;
     while(abs(newResult - oldResult) > error){
-        if(count > 500){
+        if(count > 2000){
             return x;
         }
         oldResult = simpsonIntegral();
